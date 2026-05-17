@@ -24,15 +24,24 @@ public class CharacterControl : MonoBehaviour
     {
         anim = GetComponent<Animator>();
     }
+    
     private void Start() 
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         moving = true;
+        
+        // Memastikan layar pause tertutup dan waktu berjalan normal saat game dimulai
+        resume = false;
+        Time.timeScale = 1;
+        if (resumeScreen != null)
+        {
+            resumeScreen.SetActive(false);
+        }
     }
+    
     private void FixedUpdate() 
     {
-
         _rigidbody2D.velocity = new Vector2(speed * moveDirection, _rigidbody2D.velocity.y);
 
         if (jump)
@@ -65,9 +74,8 @@ public class CharacterControl : MonoBehaviour
         {
             CharacterControl.moving = true;
         }
-        
-        
     }
+    
     private void Update() 
     {
         if(moving && !resume){
@@ -85,13 +93,13 @@ public class CharacterControl : MonoBehaviour
                     _spriteRenderer.flipX = false;
                     anim.SetFloat("speed", speed);
                 }
-
             }
             else if (grounded)
             {
                 moveDirection = 0.0f;
                 anim.SetFloat("speed", 0.0f);
             }
+            
             if (fly)
             {
                 if (Input.GetAxis("Horizontal") != 0)
@@ -106,7 +114,6 @@ public class CharacterControl : MonoBehaviour
                         moveDirection = 1.0f;
                         _spriteRenderer.flipX = false;
                     }
-
                 }
             }
 
@@ -132,23 +139,19 @@ public class CharacterControl : MonoBehaviour
                 Climb.isClimbing = false;
             }
         }
+        
+        // Logika Pause menggunakan Keyboard (Escape)
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!resume)
             {
-                resume = true;
-                Time.timeScale = 0;
-                resumeScreen.SetActive(true);
+                PauseGame(); // Memanggil fungsi Pause di bawah
             }
             else
             {
-                resume = false;
-                Time.timeScale = 1;
-                resumeScreen.SetActive(false);
+                ResumeGame(); // Memanggil fungsi Resume di bawah
             }
-            
         }
-        
     }
 
     private void OnCollisionEnter2D(Collision2D other) 
@@ -161,4 +164,27 @@ public class CharacterControl : MonoBehaviour
         }
     }
     
+    // ===================================
+    // UI BUTTON FUNCTIONS (Pause System)
+    // ===================================
+    
+    public void PauseGame()
+    {
+        resume = true;
+        Time.timeScale = 0;
+        if (resumeScreen != null)
+        {
+            resumeScreen.SetActive(true);
+        }
+    }
+
+    public void ResumeGame()
+    {
+        resume = false;
+        Time.timeScale = 1;
+        if (resumeScreen != null)
+        {
+            resumeScreen.SetActive(false);
+        }
+    }
 }

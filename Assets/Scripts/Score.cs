@@ -6,14 +6,20 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
+    [Header("Audio Settings")]
     [SerializeField] private AudioClip audioStar;
+    [SerializeField] private AudioClip audioCarrot; // Tambahan variabel untuk suara Carrot
     [SerializeField] private AudioSource _audioSource;
+    
+    [Header("UI Settings")]
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private Image _carrotsImage0;
     [SerializeField] private Image _carrotsImage1;
     [SerializeField] private Image _carrotsImage2;
+    
     public static int score = 0;
     public static int carrot = 0;
+    
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
@@ -21,13 +27,17 @@ public class Score : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other) 
     {
+        // 1. Logika mengambil Star
         if (other.gameObject.CompareTag("Star"))
         {
             score++;
             _scoreText.text = score.ToString();
+            
+            // Mainkan suara Star
             _audioSource.PlayOneShot(audioStar, 0.05f);
             Destroy(other.gameObject);
         }
+        // 2. Logika mengambil Carrot
         else if (other.gameObject.CompareTag("Carrot"))
         {
             switch (carrot)
@@ -49,7 +59,9 @@ public class Score : MonoBehaviour
                 break;
             }
             carrot++;
-            _audioSource.PlayOneShot(audioStar, 0.05f);
+            
+            // Mainkan suara khusus Carrot
+            _audioSource.PlayOneShot(audioCarrot, 0.05f);
             Destroy(other.gameObject);
         }
     }
