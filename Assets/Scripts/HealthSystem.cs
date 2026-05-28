@@ -11,6 +11,7 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] GameObject live1;
     [SerializeField] GameObject live0;
     [SerializeField] GameObject pauseScene;
+    
     private void Update() 
     {
         switch (health)
@@ -43,13 +44,33 @@ public class HealthSystem : MonoBehaviour
             break;
         }
     }
+
+    // ==================================================
+    // SISTEM HEALING (AMBIL CHERRY)
+    // ==================================================
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+        // Cek apakah player menyentuh item dengan tag "Cherry"
+        if (other.gameObject.CompareTag("Cherry"))
+        {
+            // Cek apakah nyawa saat ini masih kurang dari 3
+            if (health < 3)
+            {
+                health++; // Tambah 1 nyawa
+            }
+            
+            // Hancurkan item Cherry agar hilang dari level setelah diambil
+            Destroy(other.gameObject);
+        }
+    }
+
     IEnumerator DeathTime(){
         yield return new WaitForSeconds(1f);
         Time.timeScale = 0;
     }
+    
     IEnumerator DeathPanel(){
         yield return new WaitForSeconds(0.9f);
         pauseScene.SetActive(true);
     }
-
 }

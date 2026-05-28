@@ -8,7 +8,8 @@ public class Score : MonoBehaviour
 {
     [Header("Audio Settings")]
     [SerializeField] private AudioClip audioStar;
-    [SerializeField] private AudioClip audioCarrot; // Tambahan variabel untuk suara Carrot
+    [SerializeField] private AudioClip audioCarrot;
+    [SerializeField] private AudioClip audioCherry; // Tambahan variabel untuk suara Cherry
     [SerializeField] private AudioSource _audioSource;
     
     [Header("UI Settings")]
@@ -34,7 +35,7 @@ public class Score : MonoBehaviour
             _scoreText.text = score.ToString();
             
             // Mainkan suara Star
-            _audioSource.PlayOneShot(audioStar, 0.05f);
+            _audioSource.PlayOneShot(audioStar, 0.07f);
             Destroy(other.gameObject);
         }
         // 2. Logika mengambil Carrot
@@ -61,8 +62,17 @@ public class Score : MonoBehaviour
             carrot++;
             
             // Mainkan suara khusus Carrot
-            _audioSource.PlayOneShot(audioCarrot, 0.05f);
+            _audioSource.PlayOneShot(audioCarrot, 1.0f);
             Destroy(other.gameObject);
+        }
+        // 3. Logika suara mengambil Cherry
+        else if (other.gameObject.CompareTag("Cherry"))
+        {
+            // Mainkan suara khusus Cherry
+            _audioSource.PlayOneShot(audioCherry, 1.0f);
+            
+            // Catatan: Kita tidak perlu memanggil Destroy(other.gameObject) di sini
+            // karena objek Cherry akan dihancurkan oleh script HealthSystem.cs
         }
     }
 }

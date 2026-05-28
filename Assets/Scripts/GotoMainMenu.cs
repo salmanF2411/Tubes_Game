@@ -9,13 +9,22 @@ public class GotoMainMenu : MonoBehaviour
     {
         StartCoroutine(LoadLevel());
     }
-    IEnumerator LoadLevel(){
-        yield return new WaitForSeconds(1.5f);
+
+    IEnumerator LoadLevel()
+    {
+        // Menggunakan Realtime agar tetap berjalan meskipun game sedang di-pause
+        yield return new WaitForSecondsRealtime(1.5f);
+        
+        // Kembalikan waktu game ke normal sebelum pindah scene
+        Time.timeScale = 1f; 
+        
+        // Reset data permainan
         Score.carrot = 0;
         HealthSystem.health = 3;
         Score.score = 0;
         Enemy.killcounter = 0;
         Death.deathcounter = 0;
-        SceneManager.LoadScene(0);
+        
+        SceneManager.LoadScene("StartScene");
     }
 }
